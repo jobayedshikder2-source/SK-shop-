@@ -1,0 +1,246 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Registered customer profile and identity data",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "email"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Fashion apparel item in SK Shop catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nameBn": { "type": "string" },
+        "description": { "type": "string" },
+        "descriptionBn": { "type": "string" },
+        "category": { "type": "string" },
+        "subCategory": { "type": "string" },
+        "sku": { "type": "string" },
+        "regularPrice": { "type": "number" },
+        "discountedPrice": { "type": "number" },
+        "isSale": { "type": "boolean" },
+        "isFeatured": { "type": "boolean" },
+        "isBestSeller": { "type": "boolean" },
+        "isAvailable": { "type": "boolean" },
+        "fabricInfo": { "type": "string" },
+        "careInstructions": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "totalStock": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "name", "category", "regularPrice", "isAvailable"]
+    },
+    "Category": {
+      "title": "Category",
+      "description": "Product classification and navigation categories",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "nameBn": { "type": "string" },
+        "slug": { "type": "string" },
+        "image": { "type": "string" },
+        "description": { "type": "string" },
+        "featured": { "type": "boolean" },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "name", "slug"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer purchase transaction record",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderNumber": { "type": "string" },
+        "customerId": { "type": "string" },
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "customerEmail": { "type": "string" },
+        "deliveryAddress": { "type": "string" },
+        "district": { "type": "string" },
+        "upazila": { "type": "string" },
+        "deliveryInstructions": { "type": "string" },
+        "paymentMethod": { "type": "string" },
+        "paymentStatus": { "type": "string" },
+        "orderStatus": { "type": "string" },
+        "courierName": { "type": "string" },
+        "courierTrackingCode": { "type": "string" },
+        "subtotal": { "type": "number" },
+        "shippingFee": { "type": "number" },
+        "discount": { "type": "number" },
+        "total": { "type": "number" },
+        "couponCode": { "type": "string" },
+        "internalNotes": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "orderNumber", "customerName", "customerPhone", "deliveryAddress", "district", "paymentMethod", "orderStatus", "total"]
+    },
+    "Cart": {
+      "title": "Cart",
+      "description": "Persistent shopping cart for signed-in customer",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "subtotal": { "type": "number" },
+        "totalItems": { "type": "number" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["id", "userId"]
+    },
+    "StoreSettings": {
+      "title": "StoreSettings",
+      "description": "Configurable website settings, contact info, shipping rates",
+      "type": "object",
+      "properties": {
+        "storeName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "address": { "type": "string" },
+        "nagadNumber": { "type": "string" },
+        "deliveryChargeDhaka": { "type": "number" },
+        "deliveryChargeOutside": { "type": "number" },
+        "freeShippingThreshold": { "type": "number" },
+        "announcementBarText": { "type": "string" },
+        "announcementBarActive": { "type": "boolean" },
+        "whatsappNumber": { "type": "string" }
+      }
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Authorized administrator document",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "name": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "Coupon": {
+      "title": "Coupon",
+      "description": "Discount vouchers and promo codes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "discountType": { "type": "string" },
+        "discountValue": { "type": "number" },
+        "minOrderValue": { "type": "number" },
+        "maxDiscount": { "type": "number" },
+        "validUntil": { "type": "string" },
+        "isActive": { "type": "boolean" },
+        "usageCount": { "type": "number" }
+      },
+      "required": ["id", "code", "discountType", "discountValue", "isActive"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Customer product reviews and ratings",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "productId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "productId", "userName", "rating", "comment"]
+    },
+    "NotificationLog": {
+      "title": "NotificationLog",
+      "description": "Recorded order notifications for admin and customers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderId": { "type": "string" },
+        "type": { "type": "string" },
+        "recipient": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "status": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "orderId", "type", "title", "status"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Audit trail of administrative actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "action": { "type": "string" },
+        "performedBy": { "type": "string" },
+        "details": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "action", "performedBy", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "Customer profiles and account data"
+    },
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Store products catalog"
+    },
+    "/categories/{categoryId}": {
+      "schema": { "$ref": "#/entities/Category" },
+      "description": "Store categories collection"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Customer orders and status history"
+    },
+    "/carts/{cartId}": {
+      "schema": { "$ref": "#/entities/Cart" },
+      "description": "Persistent customer shopping carts"
+    },
+    "/storeSettings/{settingId}": {
+      "schema": { "$ref": "#/entities/StoreSettings" },
+      "description": "Store operational and display configurations"
+    },
+    "/admins/{adminId}": {
+      "schema": { "$ref": "#/entities/Admin" },
+      "description": "Authorized administrators collection"
+    },
+    "/coupons/{couponId}": {
+      "schema": { "$ref": "#/entities/Coupon" },
+      "description": "Discount coupons collection"
+    },
+    "/reviews/{reviewId}": {
+      "schema": { "$ref": "#/entities/Review" },
+      "description": "Product reviews collection"
+    },
+    "/notificationLogs/{logId}": {
+      "schema": { "$ref": "#/entities/NotificationLog" },
+      "description": "Logs of customer and admin order notifications"
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Audit log records for staff actions"
+    }
+  }
+}

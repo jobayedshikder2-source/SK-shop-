@@ -1,0 +1,8 @@
+{
+  "name": "Remix SK Shop - Premium Fashion \u0026 Clothing Bangladesh",
+  "description": "Discover trendsetting fashion at SK Shop Bangladesh. Explore Men\u0027s, Women\u0027s, and Kids\u0027 collections, Panjabi, Sarees, Western wear, and accessories with nationwide fast delivery and Cash on Delivery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

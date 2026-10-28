@@ -1,0 +1,122 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isBootstrappedAdmin() {
+      return isSignedIn() && request.auth.token.email != null && (
+        request.auth.token.email.lower() == "bnagladeshbodnaparty@gmail.com" ||
+        request.auth.token.email.lower() == "skshopsaport@gmail.com"
+      );
+    }
+
+    function isAdmin() {
+      return (isSignedIn() && request.auth.token.isAdmin == true) || isBootstrappedAdmin() || (isSignedIn() && exists(/databases/$(database)/documents/admins/$(request.auth.uid)));
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Products collection: public read, admin write
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Categories collection: public read, admin write
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Banners collection: public read, admin write
+    match /banners/{bannerId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Store settings: public read, admin write
+    match /storeSettings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Customer Carts: customer can read/write their own cart; admin full access
+    match /carts/{cartId} {
+      allow read, write: if isAdmin() || (isSignedIn() && request.auth.uid == cartId);
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && (request.auth.uid == cartId || resource.data.userId == request.auth.uid);
+      allow delete: if isAdmin() || (isSignedIn() && request.auth.uid == cartId);
+    }
+
+    // Coupons: public read, admin write
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Customer reviews
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if request.resource.data.rating >= 1 && request.resource.data.rating <= 5;
+      allow update, delete: if isAdmin();
+    }
+
+    // Orders collection: customers can create and view their own; admin full access
+    match /orders/{orderId} {
+      allow create: if request.resource.data.orderNumber is string && request.resource.data.total >= 0;
+      allow get: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid) || true;
+      allow list: if isAdmin() || (isSignedIn() && resource.data.customerId == request.auth.uid);
+      allow update: if isAdmin() || (
+        // Allow customer to cancel their own pending order
+        isSignedIn() && resource.data.customerId == request.auth.uid &&
+        request.resource.data.orderStatus == 'cancelled' &&
+        resource.data.orderStatus == 'pending'
+      );
+      allow delete: if isAdmin();
+    }
+
+    // User profiles: owner read/write, admin full access
+    match /users/{userId} {
+      allow read, write: if isSignedIn() && request.auth.uid == userId;
+      allow read, write: if isAdmin();
+    }
+
+    // Admin staff list: user can check own admin status; admins/bootstrapped admin can manage
+    match /admins/{adminId} {
+      allow read: if isAdmin() || (isSignedIn() && request.auth.uid == adminId);
+      allow write: if isBootstrappedAdmin() || isAdmin();
+    }
+
+    // Notification Logs
+    match /notificationLogs/{logId} {
+      allow read, write: if true;
+    }
+
+    // Admin Notifications
+    match /notifications/{notificationId} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Mail Queue for automated order confirmation alerts
+    match /mail/{mailId} {
+      allow create: if true;
+      allow read, write: if isAdmin();
+    }
+
+    // Audit Logs
+    match /auditLogs/{logId} {
+      allow read, write: if isAdmin();
+    }
+  }
+}
