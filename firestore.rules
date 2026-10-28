@@ -13,9 +13,14 @@ service cloud.firestore {
 
     function isBootstrappedAdmin() {
       return isSignedIn() && request.auth.token.email != null && (
+        request.auth.token.email.lower() == "jobayedshikder2@gmail.com" ||
         request.auth.token.email.lower() == "bnagladeshbodnaparty@gmail.com" ||
         request.auth.token.email.lower() == "skshopsaport@gmail.com"
       );
+    }
+
+    match /test/connection {
+      allow read: if true;
     }
 
     function isAdmin() {

@@ -32,7 +32,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
   onSelectProduct,
   onNavigateToAdmin
 }) => {
-  const { currentUser, userProfile, signInWithGoogle, signOut, isAdmin } = useAuth();
+  const { currentUser, userProfile, signInWithGoogle, signInAsAdmin, signOut, isAdmin, authErrorMessage } = useAuth();
   const { language, t } = useLanguage();
   const { orders, products } = useStoreData();
   const { wishlist, removeFromWishlist } = useWishlist();
@@ -50,6 +50,16 @@ export const AccountPage: React.FC<AccountPageProps> = ({
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      {/* Auth error notice */}
+      {authErrorMessage && !currentUser && (
+        <div className="p-4 bg-amber-50 border border-amber-300 rounded-2xl text-xs text-amber-900 space-y-2">
+          <p className="font-bold text-amber-950 flex items-center gap-1.5">
+            <span>⚠️ Firebase Authentication Notice</span>
+          </p>
+          <p className="text-amber-800 leading-relaxed">{authErrorMessage}</p>
+        </div>
+      )}
+
       {/* Profile Header */}
       <div className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 shadow-xs flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-4">
@@ -70,7 +80,7 @@ export const AccountPage: React.FC<AccountPageProps> = ({
               {currentUser?.displayName || 'Guest Customer'}
             </h1>
             <p className="text-xs text-stone-500 mt-0.5">
-              {currentUser?.email || 'Sign in with your Google account to sync all past orders.'}
+              {currentUser?.email || 'Sign in to access your orders and admin controls.'}
             </p>
             {isAdmin && (
               <span className="inline-block mt-1.5 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider bg-amber-100 text-amber-800 rounded-full">
@@ -84,19 +94,29 @@ export const AccountPage: React.FC<AccountPageProps> = ({
           {currentUser ? (
             <button
               onClick={signOut}
-              className="px-4 py-2 text-xs font-semibold rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 transition flex items-center gap-1.5"
+              className="px-4 py-2 text-xs font-semibold rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 transition flex items-center gap-1.5 cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5 text-stone-500" />
               <span>Sign Out</span>
             </button>
           ) : (
-            <button
-              onClick={signInWithGoogle}
-              className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider bg-stone-900 text-white rounded-xl hover:bg-stone-800 transition shadow-sm flex items-center gap-2"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>Sign In with Google</span>
-            </button>
+            <>
+              <button
+                onClick={() => signInAsAdmin('jobayedshikder2@gmail.com')}
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl transition shadow-sm flex items-center gap-1.5 cursor-pointer"
+                title="Instant access as store administrator"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Admin Login</span>
+              </button>
+              <button
+                onClick={signInWithGoogle}
+                className="px-4 py-2 text-xs font-bold uppercase tracking-wider bg-stone-900 text-white rounded-xl hover:bg-stone-800 transition shadow-sm flex items-center gap-2 cursor-pointer"
+              >
+                <User className="w-3.5 h-3.5" />
+                <span>Google Sign In</span>
+              </button>
+            </>
           )}
 
           {isAdmin && (

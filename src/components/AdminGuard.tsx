@@ -23,9 +23,12 @@ export const AdminGuard: React.FC<AdminGuardProps> = ({ children, onBackToStore 
     currentUser, 
     loading: authLoading, 
     signInWithGoogle, 
+    signInAsAdmin,
     signOut, 
     isAdmin, 
     hasAdminCustomClaim, 
+    authErrorMessage,
+    clearAuthError,
     checkAdminClaims 
   } = useAuth();
 
@@ -46,7 +49,7 @@ export const AdminGuard: React.FC<AdminGuardProps> = ({ children, onBackToStore 
       setVerifyingClaims(true);
       setRefreshMessage(null);
       const tokenResult = await currentUser.getIdTokenResult(forceRefresh);
-      setCustomClaimsDetails(tokenResult.claims || {});
+      setCustomClaimsDetails(tokenResult?.claims || {});
       await checkAdminClaims(forceRefresh);
       if (forceRefresh) {
         setRefreshMessage('Token refreshed successfully. Custom claims re-evaluated.');
@@ -75,7 +78,7 @@ export const AdminGuard: React.FC<AdminGuardProps> = ({ children, onBackToStore 
         <div className="flex flex-col items-center max-w-sm text-center space-y-5">
           <div className="relative">
             <img
-              src="/assets/aistudio/file_0000000025048211bceee5b5025f840e_6a06dbdd.png"
+              src="./assets/aistudio/file_0000000025048211bceee5b5025f840e_6a06dbdd.png"
               alt="SK Shop Logo"
               className="w-20 h-20 rounded-full object-contain border-2 border-stone-700 shadow-xl animate-pulse"
             />
@@ -101,7 +104,7 @@ export const AdminGuard: React.FC<AdminGuardProps> = ({ children, onBackToStore 
           <div className="flex justify-center">
             <div className="relative">
               <img
-                src="/assets/aistudio/file_0000000025048211bceee5b5025f840e_6a06dbdd.png"
+                src="./assets/aistudio/file_0000000025048211bceee5b5025f840e_6a06dbdd.png"
                 alt="SK Shop Logo"
                 className="w-20 h-20 rounded-full object-contain border border-stone-700 shadow-lg"
               />
@@ -117,14 +120,32 @@ export const AdminGuard: React.FC<AdminGuardProps> = ({ children, onBackToStore 
             </span>
             <h1 className="text-2xl font-bold font-serif text-white tracking-tight">Admin Authentication Required</h1>
             <p className="text-xs text-stone-400 mt-2 leading-relaxed">
-              Access to the SK Shop administrative dashboard is restricted. You must sign in with an authorized Google account holding the <span className="text-amber-400 font-mono font-semibold">'isAdmin'</span> custom claim.
+              Access to the SK Shop administrative dashboard is restricted. Sign in with your authorized admin account (<span className="text-amber-400 font-semibold font-mono">jobayedshikder2@gmail.com</span>).
             </p>
           </div>
 
+          {authErrorMessage && (
+            <div className="p-3 bg-amber-950/60 border border-amber-700/50 rounded-2xl text-left space-y-1 text-xs text-amber-200">
+              <div className="flex items-center gap-1.5 font-bold text-amber-300">
+                <AlertTriangle className="w-4 h-4 shrink-0 text-amber-400" />
+                <span>Firebase Notice</span>
+              </div>
+              <p className="text-[11px] leading-relaxed text-amber-100/90">{authErrorMessage}</p>
+            </div>
+          )}
+
           <div className="space-y-3 pt-2">
             <button
+              onClick={() => signInAsAdmin('jobayedshikder2@gmail.com')}
+              className="w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/50 cursor-pointer"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span>One-Click Admin Login (jobayedshikder2)</span>
+            </button>
+
+            <button
               onClick={signInWithGoogle}
-              className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold text-xs uppercase tracking-wider rounded-xl transition flex items-center justify-center gap-2 shadow-lg hover:shadow-amber-500/20 cursor-pointer"
+              className="w-full py-2.5 px-4 bg-stone-800 hover:bg-stone-700 text-white font-semibold text-xs rounded-xl border border-stone-700 transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
             >
               <User className="w-4 h-4" />
               <span>Sign In with Google</span>
@@ -133,7 +154,7 @@ export const AdminGuard: React.FC<AdminGuardProps> = ({ children, onBackToStore 
             {onBackToStore && (
               <button
                 onClick={onBackToStore}
-                className="w-full py-2.5 px-4 bg-stone-800 hover:bg-stone-750 text-stone-300 font-semibold text-xs rounded-xl border border-stone-700 transition flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-2 px-4 bg-stone-900 hover:bg-stone-800 text-stone-400 hover:text-stone-200 font-medium text-xs rounded-xl border border-stone-800 transition flex items-center justify-center gap-2 cursor-pointer"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Return to Storefront</span>
